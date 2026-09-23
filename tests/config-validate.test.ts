@@ -287,6 +287,26 @@ describe('assertValidConfigOverrides', () => {
 		).not.toThrow()
 	})
 
+	test('accepts toolbar-toggle actions', () => {
+		expect(() =>
+			assertValidConfigOverrides({
+				floatingButtons: [
+					{
+						position: 'top-left',
+						buttons: [
+							{
+								id: 'bar',
+								label: 'Bar',
+								description: 'Hide or show the button bar',
+								action: { type: 'toolbar-toggle' },
+							},
+						],
+					},
+				],
+			}),
+		).not.toThrow()
+	})
+
 	test('rejects non-send action with data field', () => {
 		expect(() =>
 			assertValidConfigOverrides({

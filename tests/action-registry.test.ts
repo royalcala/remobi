@@ -268,6 +268,45 @@ describe('createDefaultActionRegistry', () => {
 		expect(opened).toBe(true)
 	})
 
+	test('toolbar-toggle calls toggleToolbar when available', async () => {
+		const registry = createDefaultActionRegistry()
+		let toggled = false
+
+		await registry.execute(
+			{ type: 'toolbar-toggle' },
+			{
+				term: mockTerminal(),
+				kbWasOpen: false,
+				focusIfNeeded() {},
+				async sendText(_data: string) {},
+				toggleToolbar() {
+					toggled = true
+				},
+			},
+		)
+
+		expect(toggled).toBe(true)
+	})
+
+	test('toolbar-toggle falls back to focus when toggle unavailable', async () => {
+		const registry = createDefaultActionRegistry()
+		let focused = false
+
+		await registry.execute(
+			{ type: 'toolbar-toggle' },
+			{
+				term: mockTerminal(),
+				kbWasOpen: false,
+				focusIfNeeded() {
+					focused = true
+				},
+				async sendText(_data: string) {},
+			},
+		)
+
+		expect(focused).toBe(true)
+	})
+
 	test('ctrl-modifier falls back to focus when toggle unavailable', async () => {
 		const registry = createDefaultActionRegistry()
 		let focused = false

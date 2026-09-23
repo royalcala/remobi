@@ -20,6 +20,7 @@ function createGroupButton(
 				readonly focusIfNeeded: () => void
 		  }) => void)
 		| undefined,
+	toggleToolbar?: () => void,
 ): HTMLButtonElement {
 	const button = el('button')
 	button.textContent = def.label
@@ -60,6 +61,7 @@ function createGroupButton(
 				sendRawText: sendWithHooks,
 				openDrawer,
 				openComboPicker,
+				toggleToolbar,
 			})
 			.catch((error) => {
 				console.error('remobi: floating button action failed', error)
@@ -86,6 +88,7 @@ export function createFloatingButtons(
 		readonly sendText: (data: string) => Promise<void>
 		readonly focusIfNeeded: () => void
 	}) => void,
+	toggleToolbar?: () => void,
 ): { elements: HTMLDivElement[] } {
 	const elements: HTMLDivElement[] = []
 
@@ -96,7 +99,16 @@ export function createFloatingButtons(
 
 		for (const def of group.buttons) {
 			container.appendChild(
-				createGroupButton(term, def, config, hooks, actions, openDrawer, openComboPicker),
+				createGroupButton(
+					term,
+					def,
+					config,
+					hooks,
+					actions,
+					openDrawer,
+					openComboPicker,
+					toggleToolbar,
+				),
 			)
 		}
 

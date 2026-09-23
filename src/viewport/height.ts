@@ -25,6 +25,18 @@ export function lockDocumentHeight(height: string): void {
 }
 
 /**
+ * Set by the most recent `initHeightManager`. Hiding or showing the toolbar
+ * changes its height without any viewport event, so whoever does it (see the
+ * `toolbar-toggle` action) has to ask for a relayout explicitly.
+ */
+let relayout: (() => void) | null = null
+
+/** Recompute the terminal height after the toolbar changed on its own. */
+export function requestRelayout(): void {
+	relayout?.()
+}
+
+/**
  * Manage terminal height to account for the toolbar and virtual keyboard.
  * Uses visualViewport API when available for accurate keyboard detection.
  */
@@ -60,5 +72,6 @@ export function initHeightManager(toolbar: HTMLDivElement): void {
 		setTimeout(scheduleResize, 200)
 	})
 
+	relayout = scheduleResize
 	scheduleResize()
 }

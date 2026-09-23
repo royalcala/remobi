@@ -55,10 +55,22 @@ body {
 	}
 }
 
+/* Hidden on demand by the `toolbar-toggle` action. The class selector wins over
+   the media query above, so the toolbar also stays hidden after an orientation
+   change re-matches it. */
+#wt-toolbar.wt-hidden {
+	display: none;
+}
+
 .wt-row {
 	display: flex;
 	gap: 4px;
 	justify-content: center;
+	/* Row 1 has a per-button floor, so a narrow phone can run out of width before
+	   it runs out of buttons. Wrapping keeps every button reachable instead of
+	   letting the centred row run off both edges (which cut the first and last
+	   ones). */
+	flex-wrap: wrap;
 }
 
 #wt-toolbar button {
@@ -73,10 +85,21 @@ body {
 	cursor: pointer;
 	touch-action: manipulation;
 	flex-shrink: 1;
+	/* A squeezed button ellipsizes its label instead of spilling it over the
+	   neighbouring buttons. */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 #wt-toolbar .wt-row:first-child button {
-	min-width: 38px;
+	/* Share the row instead of sizing to content. Content-sized buttons add up to
+	   more than a phone is wide, and the old 38px floor kept even the shrunken row
+	   overflowing (10*38 + 9*4 gap = 416px inside a 382px row), which clipped the
+	   outermost buttons. With a 34px floor the ten stock buttons fit one 390px
+	   line and wrap below that, so nothing is ever cut. */
+	flex: 1 1 0;
+	min-width: 34px;
 }
 
 #wt-toolbar .wt-row:last-child button {
