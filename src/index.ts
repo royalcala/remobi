@@ -19,7 +19,7 @@ import { applyTheme } from './theme/apply'
 import { createToolbar } from './toolbar/toolbar'
 import type { RemobiConfig } from './types'
 import { resizeTerm, sendData, waitForTerm } from './util/terminal'
-import { initHeightManager } from './viewport/height'
+import { initHeightManager, requestRelayout } from './viewport/height'
 
 // Re-export for package consumers
 export { defineConfig } from './config'
@@ -107,12 +107,23 @@ export function init(
 				const comboPicker = createComboPicker()
 				document.body.appendChild(comboPicker.element)
 
+				// Hide/show the toolbar from any configured button (the
+				// `toolbar-toggle` action). The toolbar is created further down, so
+				// resolve it lazily instead of holding a reference from the start.
+				const toggleToolbar = (): void => {
+					const toolbarEl = document.getElementById('wt-toolbar')
+					if (!toolbarEl) return
+					toolbarEl.classList.toggle('wt-hidden')
+					requestRelayout()
+				}
+
 				// Create drawer (needed by toolbar for toggle)
 				const drawer = createDrawer(term, config.drawer.buttons, {
 					hooks,
 					appConfig: config,
 					actions,
 					openComboPicker: comboPicker.open,
+					toggleToolbar,
 				})
 				document.body.appendChild(drawer.backdrop)
 				document.body.appendChild(drawer.drawer)
@@ -131,6 +142,7 @@ export function init(
 					hooks,
 					actions,
 					comboPicker.open,
+					toggleToolbar,
 				)
 				document.body.appendChild(toolbar)
 				await hooks.runToolbarCreated({ term, config, toolbar })
@@ -149,6 +161,7 @@ export function init(
 						actions,
 						drawer.open,
 						comboPicker.open,
+						toggleToolbar,
 					)
 					for (const floatingEl of floatingEls) {
 						document.body.appendChild(floatingEl)

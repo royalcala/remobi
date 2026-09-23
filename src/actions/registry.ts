@@ -14,6 +14,7 @@ export interface ActionExecutionContext {
 		readonly description?: string
 	}) => void
 	readonly toggleCtrlModifier?: () => void
+	readonly toggleToolbar?: () => void
 }
 
 type ActionHandler = (action: ButtonAction, context: ActionExecutionContext) => void | Promise<void>
@@ -116,6 +117,14 @@ export function createDefaultActionRegistry(): ActionRegistry {
 	registry.register('drawer-toggle', (_action, context) => {
 		if (context.openDrawer) {
 			context.openDrawer()
+		} else {
+			context.focusIfNeeded()
+		}
+	})
+
+	registry.register('toolbar-toggle', (_action, context) => {
+		if (context.toggleToolbar) {
+			context.toggleToolbar()
 		} else {
 			context.focusIfNeeded()
 		}

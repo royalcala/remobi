@@ -67,6 +67,7 @@ function wireButton(
 		readonly sendText: (data: string) => Promise<void>
 		readonly focusIfNeeded: () => void
 	}) => void,
+	toggleToolbar?: () => void,
 ): void {
 	onTap(button, () => {
 		const kbWasOpen = isKeyboardOpen()
@@ -136,6 +137,7 @@ function wireButton(
 				sendRawText: sendRaw,
 				openDrawer,
 				openComboPicker,
+				toggleToolbar,
 				toggleCtrlModifier: () => {
 					if (ctrlState.active) {
 						deactivateCtrl(ctrlState, config.theme)
@@ -165,6 +167,7 @@ function buildRow(
 		readonly sendText: (data: string) => Promise<void>
 		readonly focusIfNeeded: () => void
 	}) => void,
+	toggleToolbar?: () => void,
 ): HTMLDivElement {
 	const row = el('div', { class: 'wt-row' })
 
@@ -174,7 +177,18 @@ function buildRow(
 		if (def.action.type === 'ctrl-modifier') {
 			ctrlState.buttonEl = button
 		}
-		wireButton(button, def, term, ctrlState, config, registry, hooks, openDrawer, openComboPicker)
+		wireButton(
+			button,
+			def,
+			term,
+			ctrlState,
+			config,
+			registry,
+			hooks,
+			openDrawer,
+			openComboPicker,
+			toggleToolbar,
+		)
 		row.appendChild(button)
 	}
 
@@ -197,6 +211,7 @@ export function createToolbar(
 		readonly sendText: (data: string) => Promise<void>
 		readonly focusIfNeeded: () => void
 	}) => void,
+	toggleToolbar?: () => void,
 ): ToolbarResult {
 	const toolbar = el('div', { id: 'wt-toolbar' })
 	const ctrlState = createCtrlState()
@@ -210,6 +225,7 @@ export function createToolbar(
 		hooks,
 		openDrawer,
 		openComboPicker,
+		toggleToolbar,
 	)
 	const row2 = buildRow(
 		config.toolbar.row2,
@@ -220,6 +236,7 @@ export function createToolbar(
 		hooks,
 		openDrawer,
 		openComboPicker,
+		toggleToolbar,
 	)
 
 	toolbar.appendChild(row1)

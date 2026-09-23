@@ -65,9 +65,9 @@ export interface IsolatedServe {
 }
 
 export async function startIsolatedServe(
-	options: { basePath?: string; command?: string[] } = {},
+	options: { basePath?: string; command?: string[]; config?: string } = {},
 ): Promise<IsolatedServe> {
-	const { basePath, command = ['bash', '--norc', '--noprofile'] } = options
+	const { basePath, command = ['bash', '--norc', '--noprofile'], config } = options
 	const port = await reservePort()
 	const home = mkdtempSync(join(tmpdir(), 'remobi-playwright-home-'))
 
@@ -81,6 +81,7 @@ export async function startIsolatedServe(
 			'--port',
 			String(port),
 			...(basePath ? ['--base-path', basePath] : []),
+			...(config ? ['--config', config] : []),
 			'--',
 			...command,
 		],

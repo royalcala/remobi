@@ -28,6 +28,7 @@ export function createDrawer(
 			readonly sendText: (data: string) => Promise<void>
 			readonly focusIfNeeded: () => void
 		}) => void
+		readonly toggleToolbar?: () => void
 	},
 ): DrawerResult {
 	const actionRegistry = config.actions ?? createDefaultActionRegistry()
@@ -81,6 +82,7 @@ export function createDrawer(
 					sendText: sendWithHooks,
 					sendRawText: sendWithHooks,
 					openComboPicker: config.openComboPicker,
+					toggleToolbar: config.toggleToolbar,
 				})
 				.catch((error) => {
 					console.error('remobi: drawer action execution failed', error)
