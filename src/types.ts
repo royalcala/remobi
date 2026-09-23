@@ -7,6 +7,7 @@ export type ButtonAction =
 	| { readonly type: 'combo-picker' }
 	| { readonly type: 'drawer-toggle' }
 	| { readonly type: 'toolbar-toggle' }
+	| { readonly type: 'scroll-bottom' }
 
 /** A generic control button definition used by toolbar and drawer */
 export interface ControlButton {
@@ -200,6 +201,8 @@ export interface XTerminal {
 	}
 	input(data: string, wasUserInput: boolean): void
 	focus(): void
+	/** Jump to the newest line of the local scrollback. Absent on hosts without one. */
+	scrollToBottom?(): void
 	onData(handler: (data: string) => void): { dispose(): void }
 }
 

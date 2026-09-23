@@ -307,6 +307,47 @@ describe('createDefaultActionRegistry', () => {
 		expect(focused).toBe(true)
 	})
 
+	test('scroll-bottom calls the terminal scrollToBottom when available', async () => {
+		const registry = createDefaultActionRegistry()
+		let bottomed = false
+
+		await registry.execute(
+			{ type: 'scroll-bottom' },
+			{
+				term: {
+					...mockTerminal(),
+					scrollToBottom: () => {
+						bottomed = true
+					},
+				},
+				kbWasOpen: false,
+				focusIfNeeded() {},
+				async sendText(_data: string) {},
+			},
+		)
+
+		expect(bottomed).toBe(true)
+	})
+
+	test('scroll-bottom is a no-op when the terminal has no scrollback', async () => {
+		const registry = createDefaultActionRegistry()
+		let focused = false
+
+		await registry.execute(
+			{ type: 'scroll-bottom' },
+			{
+				term: mockTerminal(),
+				kbWasOpen: false,
+				focusIfNeeded() {
+					focused = true
+				},
+				async sendText(_data: string) {},
+			},
+		)
+
+		expect(focused).toBe(true)
+	})
+
 	test('ctrl-modifier falls back to focus when toggle unavailable', async () => {
 		const registry = createDefaultActionRegistry()
 		let focused = false

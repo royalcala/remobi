@@ -88,6 +88,9 @@ function createTermBridge(term: Terminal, send: (message: ClientMessage) => void
 		focus() {
 			term.focus()
 		},
+		scrollToBottom() {
+			term.scrollToBottom()
+		},
 		onData(handler: (data: string) => void) {
 			return term.onData(handler)
 		},

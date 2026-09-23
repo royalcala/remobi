@@ -307,6 +307,23 @@ describe('assertValidConfigOverrides', () => {
 		).not.toThrow()
 	})
 
+	test('accepts scroll-bottom actions', () => {
+		expect(() =>
+			assertValidConfigOverrides({
+				drawer: {
+					buttons: [
+						{
+							id: 'bottom',
+							label: 'Bottom',
+							description: 'Jump to the newest line',
+							action: { type: 'scroll-bottom' },
+						},
+					],
+				},
+			}),
+		).not.toThrow()
+	})
+
 	test('rejects non-send action with data field', () => {
 		expect(() =>
 			assertValidConfigOverrides({

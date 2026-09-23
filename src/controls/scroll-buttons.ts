@@ -2,6 +2,7 @@ import { pageSeq, scrollSeq } from '../gestures/scroll'
 import type { ScrollConfig, XTerminal } from '../types'
 import { el } from '../util/dom'
 import { conditionalFocus, isKeyboardOpen } from '../util/keyboard'
+import { onTap } from '../util/tap'
 import { sendData } from '../util/terminal'
 
 const LONG_PRESS_DELAY = 300
@@ -96,6 +97,16 @@ export function createScrollButtons(
 
 	wireButton(upBtn, 'up')
 	wireButton(downBtn, 'down')
+
+	// Jump to the newest line of the terminal's own scrollback. Distinct from ▼,
+	// which nudges the running app one page at a time and needs the app to be
+	// listening for mouse input.
+	const bottomBtn = el('button', { 'aria-label': 'Scroll to bottom' }, '\u2913')
+	container.appendChild(bottomBtn)
+	onTap(bottomBtn, () => {
+		resetFade()
+		term.scrollToBottom?.()
+	})
 
 	// Auto-fade logic
 	let fadeTimer: ReturnType<typeof setTimeout> | undefined

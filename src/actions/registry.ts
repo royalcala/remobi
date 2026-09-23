@@ -130,6 +130,13 @@ export function createDefaultActionRegistry(): ActionRegistry {
 		}
 	})
 
+	registry.register('scroll-bottom', (_action, context) => {
+		// Local scrollback, not a key sequence: the terminal owns the history, so
+		// this lands on the newest line instead of paging the app one screen.
+		context.term.scrollToBottom?.()
+		context.focusIfNeeded()
+	})
+
 	registry.register('prefix', async (action, context) => {
 		if (action.type !== 'prefix') return
 		await context.sendText(action.data)

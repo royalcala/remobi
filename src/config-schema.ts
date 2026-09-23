@@ -25,6 +25,7 @@ const pasteActionSchema = v.strictObject({ type: v.literal('paste') })
 const comboPickerActionSchema = v.strictObject({ type: v.literal('combo-picker') })
 const drawerToggleActionSchema = v.strictObject({ type: v.literal('drawer-toggle') })
 const toolbarToggleActionSchema = v.strictObject({ type: v.literal('toolbar-toggle') })
+const scrollBottomActionSchema = v.strictObject({ type: v.literal('scroll-bottom') })
 
 const buttonActionSchema = v.variant('type', [
 	sendActionSchema,
@@ -34,6 +35,7 @@ const buttonActionSchema = v.variant('type', [
 	comboPickerActionSchema,
 	drawerToggleActionSchema,
 	toolbarToggleActionSchema,
+	scrollBottomActionSchema,
 ])
 
 // --- Control button ---
