@@ -19,11 +19,11 @@ describe('createScrollButtons', () => {
 		expect(element.id).toBe('wt-scroll-buttons')
 	})
 
-	test('has two buttons', () => {
+	test('has the page buttons and the bottom button', () => {
 		const term = mockTerminalWithSent()
 		const { element } = createScrollButtons(term, defaultConfig.gestures.scroll)
 		const buttons = element.querySelectorAll('button')
-		expect(buttons).toHaveLength(2)
+		expect(buttons).toHaveLength(3)
 	})
 
 	test('buttons have aria-labels', () => {
@@ -32,6 +32,7 @@ describe('createScrollButtons', () => {
 		const buttons = element.querySelectorAll('button')
 		expect(buttons[0]?.getAttribute('aria-label')).toBe('Page Up')
 		expect(buttons[1]?.getAttribute('aria-label')).toBe('Page Down')
+		expect(buttons[2]?.getAttribute('aria-label')).toBe('Scroll to bottom')
 	})
 
 	test('buttons have correct symbols', () => {
@@ -40,6 +41,23 @@ describe('createScrollButtons', () => {
 		const buttons = element.querySelectorAll('button')
 		expect(buttons[0]?.textContent).toBe('\u25B2')
 		expect(buttons[1]?.textContent).toBe('\u25BC')
+		expect(buttons[2]?.textContent).toBe('\u2913')
+	})
+
+	test('the bottom button moves the local scrollback and sends nothing', () => {
+		const term = mockTerminalWithSent()
+		let bottomed = 0
+		term.scrollToBottom = () => {
+			bottomed += 1
+		}
+		const { element } = createScrollButtons(term, defaultConfig.gestures.scroll)
+		document.body.appendChild(element)
+
+		element.querySelectorAll('button')[2]?.click()
+
+		expect(bottomed).toBe(1)
+		// Unlike ▲/▼ this is not a key sequence for the app.
+		expect(term.sent).toHaveLength(0)
 	})
 
 	test('click sends wheel-up sequence by default', () => {
