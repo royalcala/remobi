@@ -107,13 +107,17 @@ export function init(
 				const comboPicker = createComboPicker()
 				document.body.appendChild(comboPicker.element)
 
-				// Hide/show the toolbar from any configured button (the
+				// Hide/show our own chrome from any configured button (the
 				// `toolbar-toggle` action). The toolbar is created further down, so
 				// resolve it lazily instead of holding a reference from the start.
+				// The top controls (font size + help) go with it: they sit over the
+				// terminal's top-right corner, which is where a full-screen app draws
+				// its own controls, so they must be out of the way to reach it.
 				const toggleToolbar = (): void => {
 					const toolbarEl = document.getElementById('wt-toolbar')
 					if (!toolbarEl) return
-					toolbarEl.classList.toggle('wt-hidden')
+					const hidden = toolbarEl.classList.toggle('wt-hidden')
+					document.getElementById('wt-font-controls')?.classList.toggle('wt-hidden', hidden)
 					requestRelayout()
 				}
 

@@ -69,16 +69,23 @@ test.describe('toolbar', () => {
 			await page.waitForSelector('#wt-toolbar')
 
 			const toggle = page.locator('.wt-floating-group button', { hasText: 'Bar' })
+			const toolbar = page.locator('#wt-toolbar')
+			// The top controls sit over the terminal's top-right corner, where a
+			// full-screen app draws its own controls, so they travel with the bar.
+			const topControls = page.locator('#wt-font-controls')
 			await expect(toggle).toBeVisible()
-			await expect(page.locator('#wt-toolbar')).toBeVisible()
+			await expect(toolbar).toBeVisible()
+			await expect(topControls).toBeVisible()
 
 			await toggle.click()
-			await expect(page.locator('#wt-toolbar')).toBeHidden()
-			// The floating button outlives the toolbar, so the bar can come back.
+			await expect(toolbar).toBeHidden()
+			await expect(topControls).toBeHidden()
+			// The floating button outlives the chrome, so it can all come back.
 			await expect(toggle).toBeVisible()
 
 			await toggle.click()
-			await expect(page.locator('#wt-toolbar')).toBeVisible()
+			await expect(toolbar).toBeVisible()
+			await expect(topControls).toBeVisible()
 		} finally {
 			await serve?.close()
 			rmSync(dir, { recursive: true, force: true })

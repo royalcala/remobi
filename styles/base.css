@@ -128,6 +128,13 @@ body {
 	}
 }
 
+/* Hidden together with the toolbar (see the `toolbar-toggle` action). These sit
+   over the terminal's top-right corner, where a full-screen TUI draws its own
+   controls — herdr's "switch" lives on that row and was unreachable behind them. */
+#wt-font-controls.wt-hidden {
+	display: none;
+}
+
 #wt-font-controls button {
 	background: #45475a;
 	color: #cdd6f4;
